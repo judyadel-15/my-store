@@ -1,0 +1,145 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #ffffff;
+    direction: rtl;
+}
+
+.container {
+    background-color: #2C365A;
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius:10px ;
+}
+
+.header {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #F5F0E9;
+}
+
+.stats {
+background-color: #3C5070;
+padding: 15px;
+color: white;
+border-radius: 10px;
+margin-bottom: 20px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.stats .stats-grid {
+    display: flex;
+justify-content: space-around;
+margin: 10px 0;
+}
+
+.stats .progress-bar {
+    height: 10px;
+    background-color: #ecf0f1;
+    border-radius: 5px;
+overflow: hidden;
+margin: 10px 0;
+}
+
+.stats .progress-bar .progress-fill {
+    height: 100%;
+    background-color: #021054;
+    transition: width 0.3s ease;
+}
+
+
+.task-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.task-form .task-input{
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #ddd;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+.task-form .task-select{
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+}
+
+.task-form .add-btn {
+    padding: 12px 20px;
+background-color: #112250;
+color: #fff;
+border: none;
+cursor: pointer;
+border-radius: 8px;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #9DACCC;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.task-item .task-text {
+cursor: pointer;
+flex: 1;
+font-size: 18px;
+
+}
+
+.task-item .task-text .priority-badge {
+    padding: 2px 6px;
+    margin-right: 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: #fff;
+}
+
+.task-item .delete-btn {
+    padding: 8px 16px;
+    background-color: #384C65;
+    border-radius: 12px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.simple-footer {
+  background-color: #C0C9DB;
+  color: #121524;
+  text-align: center;
+  padding: 15px;
+  width: 100%;
+  margin-top: 30px; 
+  font-size: 0.9rem;
+}
+
+.simple-footer p {
+  margin: 0;
+}
+.container {
+  min-height: 100vh; 
+  display: flex;
+  flex-direction: column;
+}
+
+.simple-footer {
+  margin-top: auto; 
+}
