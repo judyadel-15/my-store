@@ -1,42 +1,78 @@
 
 import { useState } from "react";
-import AddTaskForm from "./components/AddTaskForm";
-import Footer from "./components/Footer";
-import Header from "./components/Header"; 
-import Stats from "./components/Stats";
-import TaskList from "./components/TaskList";
+import "./index.css";
 
-function App() {
-  const [tasks, setTasks] = useState([
-    { id: 1, name: "Buying groceries", completed: false, priority: "high" },
-    { id: 2, name: "Cleaning the house", completed: true, priority: "medium" },
-    { id: 3, name: "Exercise", completed: false, priority: "low" },
+export default function App() {
+  const [products, setProducts] = useState([
+    { id: 1, name: "lap", price: 20000, category: "الكترونيات" },
+    { id: 2, name: "phone", price: 2000, category: "الكترونيات" },
+    { id: 3, name: "book", price: 200, category: "كتب" },
   ]);
 
-  const addTask = (newTask) => {
-    setTasks([...tasks, newTask]);
+  const [newProducts, setNewProducts] = useState({
+    name: "",
+    price: "",
+    category: "كتب", // Default category
+  });
+
+  // This creates the groups for your headings
+  const grouped = products.reduce((acc, product) => {
+    const cat = product.category;
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(product);
+    return acc;
+  }, {});
+
+  const addProduct = () => {
+    const product = {
+      id: Date.now(),
+      ...newProducts,
+      // Fixed: changed from setNewProducts.price to newProducts.price
+      price: Number(newProducts.price),
+    };
+
+    setProducts([...products, product]);
+    setNewProducts({ name: "", price: "", category: "كتب" });
   };
 
-  const toggleTask = (taskId) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId ? { ...task, completed: !task.completed } : task
-    ));
-  };
-
-  const deleteTask = (taskId) => {
-    setTasks(tasks.filter(task => task.id !== taskId));
+  const deleteProduct = (id) => {
+    setProducts(products.filter((p) => p.id !== id));
   };
 
   return (
-    <div className="container">
-      <Header title="Work manager" count={tasks.length} />
-      <Stats tasks={tasks} />
-      <AddTaskForm onAdd={addTask} />
-      <TaskList tasks={tasks} onToggle={toggleTask} onDelete={deleteTask} />
+    <div className="App">
+      <h2>All Products</h2>
       
-      <Footer /> 
+      <div className="input-container">
+        <input
+          placeholder="name"
+          value={newProducts.name}
+          onChange={(e) => setNewProducts({ ...newProducts, name: e.target.value })}
+        />
+        <input
+          placeholder="price"
+          type="number"
+          value={newProducts.price}
+          onChange={(e) => setNewProducts({ ...newProducts, price: e.target.value })}
+        />
+        <button onClick={addProduct}>Add</button>
+      </div>
+
+      <div className="product-list">
+        {Object.entries(grouped).map(([category, items]) => (
+          <div key={category}>
+            <h3 className="category-title">{category}</h3>
+            <ul>
+              {items.map((p) => (
+                <li key={p.id}>
+                  <span>{p.name} - {p.price}</span>
+                  <button onClick={() => deleteProduct(p.id)}>delete</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-
-export default App;
