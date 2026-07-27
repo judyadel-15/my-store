@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   NavLink,
+  useNavigate,
 } from "react-router-dom";
 
 const mockProducts = [
@@ -77,81 +78,23 @@ const mockProducts = [
     image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=300",
     description: "Adjustable LED light.",
   },
-  {
-    id: 11,
-    name: "Speaker",
-    price: "$65",
-    image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=300",
-    description: "Portable Bluetooth speaker.",
-  },
-  {
-    id: 12,
-    name: "Desk Mat",
-    price: "$25",
-    image: "https://images.unsplash.com/photo-1585776245991-cf89dd7fc73a?w=300",
-    description: "Large protective desk pad.",
-  },
-  {
-    id: 13,
-    name: "Camera",
-    price: "$450",
-    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300",
-    description: "HD digital camera.",
-  },
-  {
-    id: 14,
-    name: "Jacket",
-    price: "$80",
-    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300",
-    description: "Classic denim jacket.",
-  },
-  {
-    id: 15,
-    name: "Candle",
-    price: "$20",
-    image: "https://images.unsplash.com/photo-1603006905003-be475563bc59?w=300",
-    description: "Scented wax candle.",
-  },
-  {
-    id: 16,
-    name: "Laptop Sleeve",
-    price: "$30",
-    image: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=300",
-    description: "Padded laptop case.",
-  },
-  {
-    id: 17,
-    name: "Fitness Band",
-    price: "$50",
-    image: "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=300",
-    description: "Heart rate tracker.",
-  },
-  {
-    id: 18,
-    name: "Earbuds",
-    price: "$89",
-    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300",
-    description: "Wireless compact earbuds.",
-  },
-  {
-    id: 19,
-    name: "Notebook",
-    price: "$12",
-    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300",
-    description: "Hardcover journal.",
-  },
-  {
-    id: 20,
-    name: "Wall Clock",
-    price: "$30",
-    image: "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?w=300",
-    description: "Minimalist clock.",
-  },
 ];
 
 const Navbar = () => (
   <nav className="navbar">
-    <div className="nav-logo">My Store</div>
+    <div className="nav-logo">
+      {/* Sample SVG logo — replace src or SVG content with your own logo */}
+      <svg
+        className="logo-icon"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        width="28"
+        height="28"
+      >
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+      </svg>
+      <span>My Store</span>
+    </div>
     <ul className="nav-links">
       <li>
         <NavLink
@@ -184,6 +127,14 @@ const Navbar = () => (
           className={({ isActive }) => (isActive ? "active" : "")}
         >
           Contact
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/login"
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          Login
         </NavLink>
       </li>
     </ul>
@@ -233,6 +184,54 @@ const Products = () => {
   );
 };
 
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Redirects to the Home page on submit
+    navigate("/");
+  };
+
+  return (
+    <div className="login-container">
+      <div className="login-card">
+        <h2>Welcome Back</h2>
+        <p className="login-subtitle">Please enter your details to sign in.</p>
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="login-btn">
+            Log In
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
   return (
     <Router>
@@ -263,6 +262,7 @@ export default function App() {
             </div>
           }
         />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );

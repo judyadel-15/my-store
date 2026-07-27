@@ -16,7 +16,6 @@ body {
   margin: 0 auto;
 }
 
-/* Navbar Styling */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -26,11 +25,19 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+/* Logo Styling */
 .nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: #ffffff;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.5px;
+}
+
+.logo-icon {
+  color: #0d6efd;
 }
 
 .nav-links {
@@ -60,7 +67,7 @@ body {
   border-bottom: 2px solid #0d6efd;
 }
 
-
+/* Products Section */
 .products-container {
   max-width: 1140px;
   margin: 0 auto;
@@ -81,7 +88,6 @@ body {
   gap: 24px;
 }
 
-/* Professional Clean Card Design */
 .product-card {
   background-color: #ffffff;
   border: 1px solid #e9ecef;
@@ -129,10 +135,9 @@ body {
   color: #6c757d;
   line-height: 1.4;
   margin: 0 0 16px 0;
-  flex-grow: 1; /* Pushes the button neatly to the bottom */
+  flex-grow: 1;
 }
 
-/* Button & Pagination Styling */
 button {
   background-color: #0d6efd;
   color: #ffffff;
@@ -180,4 +185,75 @@ button:disabled {
 .pagination span {
   font-size: 15px;
   color: #495057;
+}
+
+/* Login Page Styling */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  padding: 20px;
+}
+
+.login-card {
+  background-color: #ffffff;
+  padding: 36px 32px;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-card h2 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  color: #1a1d20;
+}
+
+.login-subtitle {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.form-group input {
+  padding: 10px 14px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.login-btn {
+  margin-top: 8px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
 }
