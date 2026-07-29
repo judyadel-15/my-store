@@ -1,3 +1,4 @@
+
 * {
   box-sizing: border-box;
 }
@@ -12,7 +13,7 @@ body {
 
 .page {
   padding: 40px 20px;
-  max-width: 1000px;
+  max-width: 1140px;
   margin: 0 auto;
 }
 
@@ -25,7 +26,6 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* Logo Styling */
 .nav-logo {
   display: flex;
   align-items: center;
@@ -67,7 +67,30 @@ body {
   border-bottom: 2px solid #0d6efd;
 }
 
-/* Products Section */
+.home-container {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.hero-section h1 {
+  margin: 0 0 10px 0;
+  font-size: 32px;
+}
+
+.hero-section p {
+  color: #6c757d;
+  margin: 0;
+}
+
+.categories-section h2,
+.top-sales-section h2,
+.all-products-section h2,
+.feedback-section h2 {
+  font-size: 22px;
+  color: #1a1d20;
+  margin: 0;
+}
+
 .products-container {
   max-width: 1140px;
   margin: 0 auto;
@@ -138,6 +161,7 @@ body {
   flex-grow: 1;
 }
 
+/* Buttons & Pagination */
 button {
   background-color: #0d6efd;
   color: #ffffff;
@@ -187,7 +211,6 @@ button:disabled {
   color: #495057;
 }
 
-/* Login Page Styling */
 .login-container {
   display: flex;
   justify-content: center;
