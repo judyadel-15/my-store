@@ -11,7 +11,6 @@ import {
 } from "react-router-dom";
 
 const uniqueProducts = [
-  // Page 1 Products
   { id: 1, name: "Wireless Headphones", category: "Electronics", price: "$120", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400", description: "High-fidelity wireless sound with active noise cancellation." },
   { id: 2, name: "Smart Watch Series 7", category: "Electronics", price: "$250", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400", description: "Advanced fitness tracking with an always-on Retina display." },
   { id: 3, name: "Portable Bluetooth Speaker", category: "Electronics", price: "$85", image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400", description: "Crisp sound with deep bass and IPX7 waterproof rating." },
@@ -24,8 +23,6 @@ const uniqueProducts = [
   { id: 10, name: "Stainless Steel Cutlery Set", category: "Home & Kitchen", price: "$35", image: "https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=400", description: "Mirror-polished luxury spoons, forks, and knives set." },
   { id: 11, name: "Modern Coffee Mug", category: "Home & Kitchen", price: "$20", image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400", description: "Ergonomic ceramic mug perfect for espresso and tea." },
   { id: 12, name: "Electric Espresso Machine", category: "Home & Kitchen", price: "$210", image: "https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=400", description: "Professional high-pressure coffee maker for home baristas." },
-
-  // Page 2 Products
   { id: 13, name: "Ergonomic Office Chair", category: "Furniture", price: "$195", image: "https://images.unsplash.com/photo-1580481072645-022f9a6d8310?w=400", description: "High-back breathable mesh chair with adjustable lumbar support." },
   { id: 14, name: "Minimalist Desk Lamp", category: "Home & Kitchen", price: "$40", image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400", description: "Dimmable LED table lamp with eye-care lighting modes." },
   { id: 15, name: "Professional Basketball", category: "Sports", price: "$40", image: "https://images.unsplash.com/photo-1519861531473-9200262188bf?w=400", description: "Official size composite leather basketball for indoor/outdoor play." },
@@ -48,9 +45,18 @@ const mockFeedbacks = [
   { id: 3, user: "Mohamed", comment: "Customer support was super helpful.", rating: "⭐⭐⭐⭐⭐" },
 ];
 
-const Navbar = ({ cartCount }) => {
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
+const Navbar = ({ cartItems }) => {
   const location = useLocation();
   const authPaths = ["/login", "/register", "/forgot-password", "/otp", "/new-password"];
+  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   if (authPaths.includes(location.pathname)) {
     return null;
@@ -71,8 +77,10 @@ const Navbar = ({ cartCount }) => {
         <li><NavLink to="/contact" className={({ isActive }) => (isActive ? "active" : "")}>Contact</NavLink></li>
         <li><NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>Login</NavLink></li>
         <li><NavLink to="/register" className={({ isActive }) => (isActive ? "active" : "")}>Register</NavLink></li>
-        <li className="nav-cart">
-          🛒 <span className="cart-badge">{cartCount}</span>
+        <li>
+          <Link to="/cart" className="nav-cart" style={{ textDecoration: "none" }}>
+            🛒 <span className="cart-badge">{totalItems}</span>
+          </Link>
         </li>
       </ul>
     </nav>
@@ -92,7 +100,7 @@ const Footer = () => {
       <div className="footer-container">
         <div className="footer-brand">
           <h3>MyStore</h3>
-          <p>Your ultimate destination for premium quality products and deals.</p>
+          <p>Your ultimate destination for premium quality products and unbeatable everyday value.</p>
         </div>
         <div className="footer-links">
           <h4>Quick Links</h4>
@@ -113,14 +121,14 @@ const Footer = () => {
   );
 };
 
-const Home = () => {
+const Home = ({ addToCart }) => {
   const navigate = useNavigate();
 
   return (
     <div className="home-container">
       <section className="hero-section">
         <h1>Welcome to MyStore</h1>
-        <p>Discover luxury, style, and innovation in every product.</p>
+        <p>Discover luxury, style, and innovation curated specifically for your everyday lifestyle.</p>
       </section>
 
       <section className="categories-slider-container">
@@ -135,7 +143,7 @@ const Home = () => {
 
       <section className="banner-section">
         <h2>🔥 Mega Summer Sale - Up to 50% Off!</h2>
-        <p>Use code SUMMER2026 at checkout.</p>
+        <p>Use promo code <strong>SUMMER2026</strong> at checkout for exclusive savings.</p>
       </section>
 
       <section className="top-sales-section">
@@ -147,7 +155,7 @@ const Home = () => {
               <h3>{p.name}</h3>
               <p className="price">{p.price}</p>
               <p className="description">{p.description}</p>
-              <button onClick={(e) => { e.stopPropagation(); navigate(`/products/${p.id}`); }}>View Details</button>
+              <button onClick={(e) => { e.stopPropagation(); addToCart(p); }}>Add to Cart</button>
             </div>
           ))}
         </div>
@@ -177,6 +185,11 @@ const Products = ({ addToCart }) => {
   const totalPages = Math.ceil(uniqueProducts.length / itemsPerPage);
   const currentProducts = uniqueProducts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="products-container">
       <div className="products-grid">
@@ -186,21 +199,21 @@ const Products = ({ addToCart }) => {
             <h3>{p.name}</h3>
             <p className="price">{p.price}</p>
             <p className="description">{p.description}</p>
-            <button onClick={(e) => { e.stopPropagation(); addToCart(); }}>Add to Cart</button>
+            <button onClick={(e) => { e.stopPropagation(); addToCart(p); }}>Add to Cart</button>
           </div>
         ))}
       </div>
 
       <div className="pagination">
-        <button onClick={() => setPage(page - 1)} disabled={page === 1}>&#8592; Back</button>
+        <button onClick={() => handlePageChange(page - 1)} disabled={page === 1}>&#8592; Back</button>
         <span>Page <strong>{page}</strong> of <strong>{totalPages}</strong></span>
-        <button onClick={() => setPage(page + 1)} disabled={page === totalPages}>Forward &#8594;</button>
+        <button onClick={() => handlePageChange(page + 1)} disabled={page === totalPages}>Forward &#8594;</button>
       </div>
     </div>
   );
 };
 
-const CategoryProducts = () => {
+const CategoryProducts = ({ addToCart }) => {
   const { categorySlug } = useParams();
   const navigate = useNavigate();
 
@@ -210,7 +223,7 @@ const CategoryProducts = () => {
 
   return (
     <div className="products-container">
-      <h2>Category: {categorySlug.replace(/-/g, ' ').toUpperCase()}</h2>
+      <h2>Category: {categorySlug ? categorySlug.replace(/-/g, ' ').toUpperCase() : ""}</h2>
       {filteredProducts.length === 0 ? (
         <p style={{ marginTop: "20px" }}>No products found in this category.</p>
       ) : (
@@ -221,7 +234,7 @@ const CategoryProducts = () => {
               <h3>{p.name}</h3>
               <p className="price">{p.price}</p>
               <p className="description">{p.description}</p>
-              <button onClick={(e) => { e.stopPropagation(); navigate(`/products/${p.id}`); }}>View Details</button>
+              <button onClick={(e) => { e.stopPropagation(); addToCart(p); }}>Add to Cart</button>
             </div>
           ))}
         </div>
@@ -248,8 +261,94 @@ const ProductDetails = ({ addToCart }) => {
         <p className="description" style={{ fontSize: "16px", marginBottom: "24px", lineHeight: "1.6" }}>
           {product.description}
         </p>
-        <button style={{ maxWidth: "200px" }} onClick={addToCart}>Add to Cart</button>
+        <button style={{ maxWidth: "200px" }} onClick={() => addToCart(product)}>Add to Cart</button>
       </div>
+    </div>
+  );
+};
+
+const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
+  const [checkedOut, setCheckedOut] = useState(false);
+  
+  const calculateTotal = () => {
+    return cartItems.reduce((sum, item) => {
+      const priceNum = parseFloat(item.price.replace("$", ""));
+      return sum + priceNum * item.quantity;
+    }, 0).toFixed(2);
+  };
+
+  const handleCheckout = () => {
+    setCheckedOut(true);
+    clearCart();
+  };
+
+  if (checkedOut) {
+    return (
+      <div className="login-container">
+        <div className="login-card" style={{ textAlign: "center", maxWidth: "500px" }}>
+          <h2 style={{ color: "#10b981" }}>Order Placed Successfully! 🎉</h2>
+          <p className="login-subtitle" style={{ marginTop: "12px" }}>
+            Thank you for shopping with MyStore. We are preparing your order for immediate dispatch.
+          </p>
+          <Link to="/products">
+            <button className="login-btn" style={{ marginTop: "20px" }}>Continue Shopping</button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="products-container">
+      <h2>Your Shopping Cart</h2>
+      {cartItems.length === 0 ? (
+        <div style={{ textAlign: "center", margin: "60px 0" }}>
+          <p style={{ color: "#94a3b8", fontSize: "18px" }}>Your cart is currently empty.</p>
+          <Link to="/products" style={{ textDecoration: "none" }}>
+            <button style={{ maxWidth: "220px", marginTop: "20px" }}>Explore Products</button>
+          </Link>
+        </div>
+      ) : (
+        <div className="cart-layout">
+          <div className="cart-items-list">
+            {cartItems.map((item) => (
+              <div key={item.id} className="cart-item-card">
+                <img src={item.image} alt={item.name} className="cart-item-image" />
+                <div className="cart-item-details">
+                  <h3>{item.name}</h3>
+                  <p className="price">{item.price}</p>
+                </div>
+                <div className="cart-quantity-controls">
+                  <button className="qty-btn" onClick={() => updateQuantity(item.id, -1)}>-</button>
+                  <span>{item.quantity}</span>
+                  <button className="qty-btn" onClick={() => updateQuantity(item.id, 1)}>+</button>
+                </div>
+                <button className="remove-btn" onClick={() => removeFromCart(item.id)}>Remove</button>
+              </div>
+            ))}
+          </div>
+
+          <div className="cart-summary-card">
+            <h3>Order Summary</h3>
+            <div className="summary-row">
+              <span>Items Total:</span>
+              <span>${calculateTotal()}</span>
+            </div>
+            <div className="summary-row">
+              <span>Shipping:</span>
+              <span style={{ color: "#10b981" }}>FREE</span>
+            </div>
+            <hr style={{ borderColor: "#334155", margin: "16px 0" }} />
+            <div className="summary-row" style={{ fontSize: "20px", fontWeight: "bold" }}>
+              <span>Total:</span>
+              <span className="price">${calculateTotal()}</span>
+            </div>
+            <button className="login-btn" style={{ marginTop: "20px" }} onClick={handleCheckout}>
+              Proceed to Checkout
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -257,8 +356,64 @@ const ProductDetails = ({ addToCart }) => {
 const About = () => {
   return (
     <div className="about-container">
-      <h2>About MyStore</h2>
-      <p>MyStore is a modern e-commerce platform dedicated to providing the best online shopping experience with top-tier product variety, swift delivery, and exceptional customer support.</p>
+      <section className="about-hero">
+        <h2>About MyStore</h2>
+        <p className="about-lead">
+          Redefining online shopping through innovation, exceptional customer service, and uncompromised quality.
+        </p>
+      </section>
+
+      <section className="about-content-grid">
+        <div className="about-card">
+          <h3>Our Mission</h3>
+          <p>
+            At MyStore, our mission is simple: to make premium lifestyle, fashion, and technology products accessible to everyone worldwide with seamless delivery and unmatched value.
+          </p>
+        </div>
+        <div className="about-card">
+          <h3>Our Vision</h3>
+          <p>
+            We aim to become the premier global e-commerce destination known for reliability, unmatched product variety, and dynamic customer-first services.
+          </p>
+        </div>
+      </section>
+
+      <section className="about-stats">
+        <div className="stat-box">
+          <h2>10k+</h2>
+          <p>Happy Customers</p>
+        </div>
+        <div className="stat-box">
+          <h2>500+</h2>
+          <p>Premium Products</p>
+        </div>
+        <div className="stat-box">
+          <h2>99.8%</h2>
+          <p>On-Time Delivery</p>
+        </div>
+        <div className="stat-box">
+          <h2>24/7</h2>
+          <p>Dedicated Support</p>
+        </div>
+      </section>
+
+      <section className="about-values">
+        <h3>Why Choose Us?</h3>
+        <div className="values-grid">
+          <div className="value-item">
+            <h4>Verified Quality</h4>
+            <p>Every single product in our catalog undergoes strict quality testing before dispatch.</p>
+          </div>
+          <div className="value-item">
+            <h4>Fast Shipping</h4>
+            <p>Partnered with global logistics providers to guarantee rapid and secure packaging delivery.</p>
+          </div>
+          <div className="value-item">
+            <h4>Customer Protection</h4>
+            <p>100% secure payment transactions along with effortless 30-day hassle-free return policies.</p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
@@ -278,7 +433,7 @@ const Contact = () => {
         <p className="login-subtitle">We’d love to hear from you. Send us a message!</p>
         {submitted ? (
           <div style={{ color: "#10b981", textAlign: "center", fontWeight: "600", padding: "20px 0" }}>
-            Thank you! Your message has been sent.
+            Thank you! Your message has been successfully sent.
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="login-form">
@@ -501,23 +656,55 @@ const NewPassword = () => {
 };
 
 export default function App() {
-  const [cartCount, setCartCount] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
 
-  const addToCart = () => {
-    setCartCount((prev) => prev + 1);
+  const addToCart = (product) => {
+    setCartItems((prevCart) => {
+      const existing = prevCart.find((item) => item.id === product.id);
+      if (existing) {
+        return prevCart.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+      return [...prevCart, { ...product, quantity: 1 }];
+    });
+  };
+
+  const updateQuantity = (id, delta) => {
+    setCartItems((prevCart) =>
+      prevCart
+        .map((item) => {
+          if (item.id === id) {
+            const newQty = item.quantity + delta;
+            return newQty > 0 ? { ...item, quantity: newQty } : null;
+          }
+          return item;
+        })
+        .filter(Boolean)
+    );
+  };
+
+  const removeFromCart = (id) => {
+    setCartItems((prevCart) => prevCart.filter((item) => item.id !== id));
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
   };
 
   return (
     <Router>
-      <Navbar cartCount={cartCount} />
+      <ScrollToTop />
+      <Navbar cartItems={cartItems} />
       <div className="page">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home addToCart={addToCart} />} />
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Products addToCart={addToCart} />} />
           <Route path="/products/:id" element={<ProductDetails addToCart={addToCart} />} />
-          <Route path="/category/:categorySlug" element={<CategoryProducts />} />
+          <Route path="/category/:categorySlug" element={<CategoryProducts addToCart={addToCart} />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/cart" element={<Cart cartItems={cartItems} updateQuantity={updateQuantity} removeFromCart={removeFromCart} clearCart={clearCart} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -528,4 +715,4 @@ export default function App() {
       <Footer />
     </Router>
   );
-}    
+}
